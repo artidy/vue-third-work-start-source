@@ -4,6 +4,7 @@ import { useRoute, useRouter } from "vue-router";
 import { useTaskCardDate } from "@/common/composables";
 import { getImage, getReadableDate } from "@/common/helpers";
 import TaskCardTags from "@/modules/tasks/components/TaskCardTags.vue";
+import TaskCardViewTicksList from "@/modules/tasks/components/TaskCardViewTicksList.vue";
 
 const router = useRouter();
 const route = useRoute();
@@ -111,8 +112,13 @@ const dueDate = computed(() => {
           </a>
         </div>
       </div>
-
       <!--Чек-лист-->
+      <div
+        v-if="task && task.ticks && task.ticks.length"
+        class="task-card__block"
+      >
+        <task-card-view-ticks-list :ticks="task.ticks" disabled />
+      </div>
 
       <!--Метки-->
       <div
