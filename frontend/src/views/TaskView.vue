@@ -2,15 +2,16 @@
 import { ref, onMounted, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useTaskCardDate } from "@/common/composables";
-import { getImage, getReadableDate } from "@/common/helpers";
+import { getPublicImage, getReadableDate } from "@/common/helpers";
 import TaskCardTags from "@/modules/tasks/components/TaskCardTags.vue";
 import TaskCardViewTicksList from "@/modules/tasks/components/TaskCardViewTicksList.vue";
 import TaskCardViewComments from "@/modules/tasks/components/TaskCardViewComments.vue";
-import { useTasksStore } from "@/stores";
+import { useAuthStore, useTasksStore } from "@/stores";
 
 const router = useRouter();
 const route = useRoute();
 const tasksStore = useTasksStore();
+const authStore = useAuthStore();
 
 const closeDialog = function () {
   router.push("/");
@@ -24,7 +25,7 @@ onMounted(() => {
 });
 
 const task = computed(() => {
-  return tasksStore.tasks.find(task => task.id == route.params.id)
+  return tasksStore.tasks.find((task) => task.id == route.params.id);
 });
 
 const dueDate = computed(() => {
@@ -60,6 +61,7 @@ const addCommentToList = function (comment) {
           </h1>
           <!--Кнопка редактирования задачи-->
           <a
+            v-if="authStore.getUserAttribute('isAdmin')"
             class="task-card__edit"
             @click="
               router.push({
@@ -84,7 +86,10 @@ const addCommentToList = function (comment) {
             Участник:
             <div class="task-card__participant">
               <button type="button" class="task-card__user">
-                <img :src="getImage(task.user.avatar)" :alt="task.user.name" />
+                <img
+                  :src="getPublicImage(task.user.avatar)"
+                  :alt="task.user.name"
+                />
                 {{ task.user.name }}
               </button>
             </div>
