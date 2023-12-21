@@ -5,6 +5,7 @@ import { useTaskCardDate } from "@/common/composables";
 import { getImage, getReadableDate } from "@/common/helpers";
 import TaskCardTags from "@/modules/tasks/components/TaskCardTags.vue";
 import TaskCardViewTicksList from "@/modules/tasks/components/TaskCardViewTicksList.vue";
+import TaskCardViewComments from "@/modules/tasks/components/TaskCardViewComments.vue";
 
 const router = useRouter();
 const route = useRoute();
@@ -31,9 +32,17 @@ onMounted(() => {
 const task = computed(() => {
   return props.tasks.find((task) => task.id == route.params.id);
 });
+
 const dueDate = computed(() => {
   return getReadableDate(task.value.dueDate || "");
 });
+
+const addCommentToList = function (comment) {
+  if (!task.value.comments) {
+    task.value.comments = [];
+  }
+  task.value.comments.push(comment);
+};
 </script>
 
 <template>
@@ -130,6 +139,13 @@ const dueDate = computed(() => {
       </div>
 
       <!--Комментарии-->
+      <task-card-view-comments
+        v-if="task"
+        class="task-card__comments"
+        :comments="task.comments || []"
+        :task-id="task.id"
+        @create-new-comment="addCommentToList"
+      />
     </section>
   </div>
 </template>
