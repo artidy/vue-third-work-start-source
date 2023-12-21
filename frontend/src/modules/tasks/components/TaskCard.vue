@@ -3,15 +3,22 @@ import { useRouter } from "vue-router";
 import AppDrag from "@/common/components/AppDrag.vue";
 import AppDrop from "@/common/components/AppDrop.vue";
 import TaskCardTags from "./TaskCardTags.vue";
-import { getImage } from "@/common/helpers";
+import { getPublicImage } from "@/common/helpers";
+import { useUsersStore } from "@/stores";
+import { computed } from "vue";
 
 const router = useRouter();
+const usersStore = useUsersStore();
 
-defineProps({
+const props = defineProps({
   task: {
     type: Object,
     required: true,
   },
+});
+
+const taskUser = computed(() => {
+  return usersStore.users.find((user) => user.id === props.task.userId);
 });
 
 defineEmits(["drop"]);
@@ -24,16 +31,16 @@ defineEmits(["drop"]);
     <app-drag :transfer-data="task">
       <div class="task" @click="router.push({ path: `/${task.id}` })">
         <!--        Этот блок показывает пользователя, который работает над задачей-->
-        <div v-if="task.user" class="task__user">
+        <div v-if="taskUser" class="task__user">
           <div class="task__avatar">
             <img
-              :src="getImage(task.user.avatar)"
+              :src="getPublicImage(taskUser.avatar)"
               alt="Аватар пользователя"
               width="20"
               height="20"
             />
           </div>
-          {{ task.user.name }}
+          {{ taskUser.name }}
         </div>
         <!--        Этот блок показывает статусы задачи-->
         <div class="task__statuses">

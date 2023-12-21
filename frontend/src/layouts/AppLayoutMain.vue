@@ -1,13 +1,16 @@
 <script setup>
 import AppLayoutSidebar from "@/layouts/AppLayoutSidebar.vue";
 import AppLayoutHeader from "@/layouts/AppLayoutHeader.vue";
+import { useAuthStore } from "@/stores";
+
+const authStore = useAuthStore();
 </script>
 
 <template>
   <div class="app_layout">
     <app-layout-header />
     <div class="content">
-      <app-layout-sidebar />
+      <app-layout-sidebar v-if="authStore.isAuthenticated" />
       <slot />
     </div>
   </div>

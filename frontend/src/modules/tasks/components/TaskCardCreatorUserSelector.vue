@@ -1,28 +1,32 @@
 <script setup>
-import users from '@/mocks/users.json'
-import { ref, computed } from 'vue'
-import { getImage } from '../../../common/helpers'
-import AppIcon from '@/common/components/AppIcon.vue'
+import { ref, computed } from "vue";
+import { getPublicImage } from "@/common/helpers";
+import AppIcon from "@/common/components/AppIcon.vue";
+import { useUsersStore } from "@/stores";
+
+const usersStore = useUsersStore();
 
 const props = defineProps({
   modelValue: {
     type: [String],
-    default: null
-  }
-})
-const emits = defineEmits(['update:modelValue'])
+    default: null,
+  },
+});
+const emits = defineEmits(["update:modelValue"]);
 
-const isMenuOpened = ref(false)
+const isMenuOpened = ref(false);
 
-const currentWorker = computed(() => users.find(({ id }) => id === props.modelValue))
+const currentWorker = computed(() =>
+  usersStore.users.find(({ id }) => id === props.modelValue),
+);
 
 function setUser(id) {
-  emits('update:modelValue', id)
-  hideUserMenu()
+  emits("update:modelValue", id);
+  hideUserMenu();
 }
 
 function hideUserMenu() {
-  isMenuOpened.value = false
+  isMenuOpened.value = false;
 }
 </script>
 
@@ -31,44 +35,35 @@ function hideUserMenu() {
     Участник:
     <div class="task-card__participant">
       <button
-          v-if="!modelValue"
-          type="button"
-          class="task-card__link"
-          @click.stop="isMenuOpened = !isMenuOpened"
+        v-if="!modelValue"
+        type="button"
+        class="task-card__link"
+        @click.stop="isMenuOpened = !isMenuOpened"
       >
         добавить пользователя
       </button>
-      <button
-          v-else
-          class="users-list__user"
-      >
+      <button v-else class="users-list__user">
         <img
-            :src="getImage(currentWorker.avatar)"
-            @click.stop="isMenuOpened = !isMenuOpened"
+          :src="getPublicImage(currentWorker.avatar)"
+          @click.stop="isMenuOpened = !isMenuOpened"
         />
         <span @click.stop="isMenuOpened = !isMenuOpened">
           {{ currentWorker.name }}
         </span>
         <app-icon
-            class="icon--trash users-list__icon"
-            @click="$emit('update:modelValue', null)"
+          class="icon--trash users-list__icon"
+          @click="$emit('update:modelValue', null)"
         />
       </button>
       <div class="task-card__users">
         <ul
-            v-if="isMenuOpened"
-            v-click-outside="hideUserMenu"
-            class="users-list"
+          v-if="isMenuOpened"
+          v-click-outside="hideUserMenu"
+          class="users-list"
         >
-          <li
-              v-for="user in users"
-              :key="user.id"
-          >
-            <button
-                class="users-list__user"
-                @click="setUser(user.id)"
-            >
-              <img :src="getImage(user.avatar)" />
+          <li v-for="user in usersStore.users" :key="user.id">
+            <button class="users-list__user" @click="setUser(user.id)">
+              <img :src="getPublicImage(user.avatar)" />
               <span>{{ user.name }}</span>
             </button>
           </li>
