@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import { useRouter } from "vue-router";
 import { createNewDate, createUUIDv4 } from "@/common/helpers";
 import { cloneDeep } from "lodash";
@@ -8,6 +8,8 @@ import { STATUSES } from "@/common/constants";
 import { useTaskCardDate } from "@/common/composables";
 import AppButton from "@/common/components/AppButton.vue";
 import { validateFields } from "@/common/validator";
+import TaskCardCreatorTags from "@/modules/tasks/components/TaskCardCreatorTags.vue";
+import TaskCardViewTicksList from "@/modules/tasks/components/TaskCardViewTicksList.vue";
 
 const router = useRouter();
 
@@ -150,6 +152,10 @@ function submit() {
   // Переход на главную страницу
   router.push("/");
 }
+
+function setTags(tags) {
+  task.value.tags = tags;
+}
 </script>
 
 <template>
@@ -279,9 +285,10 @@ function submit() {
         />
       </div>
 
-      <!--      Блок тегов-->
+      <!--Блок тегов-->
       <div class="task-card__block">
-        <!--        Компонент создания тегов-->
+        <!--Компонент создания тегов-->
+        <task-card-creator-tags :tags="task.tags" @setTags="setTags" />
       </div>
 
       <!--Блок сохранения и отмены изменений-->
