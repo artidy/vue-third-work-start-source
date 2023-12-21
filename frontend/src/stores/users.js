@@ -5,5 +5,10 @@ export const useUsersStore = defineStore("users", {
     users: [],
   }),
   getters: {},
-  actions: {},
+  actions: {
+    async fetchUsers() {
+      // Получение данных из JSON-файла заменим в последующих разделах
+      this.users = users;
+    },
+  },
 });

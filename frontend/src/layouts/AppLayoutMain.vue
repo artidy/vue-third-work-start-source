@@ -1,29 +1,13 @@
 <script setup>
 import AppLayoutSidebar from "@/layouts/AppLayoutSidebar.vue";
 import AppLayoutHeader from "@/layouts/AppLayoutHeader.vue";
-
-const props = defineProps({
-  tasks: {
-    type: Array,
-    required: true,
-  },
-  filters: {
-    type: Object,
-    required: true,
-  },
-});
-
-defineEmits(["updateTasks"]);
 </script>
 
 <template>
   <div class="app_layout">
     <app-layout-header />
     <div class="content">
-      <app-layout-sidebar
-          :tasks="props.tasks"
-          @update-tasks="$emit('updateTasks', $event)"
-      />
+      <app-layout-sidebar />
       <slot />
     </div>
   </div>

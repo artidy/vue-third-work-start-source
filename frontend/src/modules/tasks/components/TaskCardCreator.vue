@@ -10,9 +10,10 @@ import AppButton from "@/common/components/AppButton.vue";
 import { validateFields } from "@/common/validator";
 import TaskCardCreatorTags from "@/modules/tasks/components/TaskCardCreatorTags.vue";
 import TaskCardViewTicksList from "@/modules/tasks/components/TaskCardViewTicksList.vue";
+import { useTasksStore } from "@/stores";
 
 const router = useRouter();
-
+const tasksStore = useTasksStore();
 const dialog = ref(null);
 const isFormValid = ref(true);
 
@@ -55,10 +56,8 @@ const taskToWork = props.taskToEdit
 
 const task = ref(taskToWork);
 
-const emits = defineEmits(["addTask", "editTask", "deleteTask"]);
-
 function deleteTask() {
-  emits("deleteTask", task.value.id);
+  tasksStore.deleteTask(task.value.id);
   router.push("/");
 }
 
@@ -144,10 +143,10 @@ function submit() {
   }
   if (props.taskToEdit) {
     // Редактируемая задача
-    emits("editTask", task.value);
+    tasksStore.editTask(task.value);
   } else {
     // Новая задача
-    emits("addTask", task.value);
+    tasksStore.addTask(task.value);
   }
   // Переход на главную страницу
   router.push("/");
