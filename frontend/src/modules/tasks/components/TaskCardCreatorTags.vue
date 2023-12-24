@@ -22,7 +22,7 @@ function setTags(tags, refresh) {
     timeout.value = setTimeout(() => {
       showAnalyzer.value = true;
       clearTimeout(timeout.value);
-    });
+    }, 500);
   } else {
     emits("setTags", tags);
   }
@@ -34,12 +34,14 @@ function setTags(tags, refresh) {
     <div class="task-card__tags--text">
       Добавьте теги, разделённые символом #
     </div>
-    <task-card-creator-tags-analyzer
-      v-if="showAnalyzer"
-      class="task-card__tags-analyzer"
-      :tags="tags"
-      @setTags="setTags"
-    />
+    <transition name="replace">
+      <task-card-creator-tags-analyzer
+        v-if="showAnalyzer"
+        class="task-card__tags-analyzer"
+        :tags="tags"
+        @setTags="setTags"
+      />
+    </transition>
   </div>
 </template>
 
